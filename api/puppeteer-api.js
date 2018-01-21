@@ -1,24 +1,31 @@
-
-
 const puppeteer = require('puppeteer');
 
-
+let browser;
 const bypass = (name => name);
 
-
 const openPage = (async (headless) => {
-    console.log('1');
-
-    const browser = await puppeteer.launch({ headless, });
-    const page = await browser.newPage();
-    await page.goto('https://example.com');
-    await page.screenshot({ path: 'example.png', });
-    // await page.pdf({path: 'hn.pdf', format: 'A4'});
-    //
-    // await browser.close();
+    try {
+        browser = await puppeteer.launch({ headless, });
+        return 'success';
+    } catch (e) {
+        return e.message;
+    }
 });
+
+const goto = (async (tab, url) => {
+    try {
+        const page = await browser.pages();
+        const retValue = await page[tab].goto(url);
+        return retValue;
+    } catch (e) {
+        return e.message;
+    }
+});
+
+
 // now we export the class, so other modules can create Cat objects
 module.exports = {
     bypass,
     openPage,
+    goto,
 };

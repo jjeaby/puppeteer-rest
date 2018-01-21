@@ -12,16 +12,29 @@ router.get('/', (req, res, next) => {
     res.send(rest);
 });
 
-router.get('/test', (req, res, next) => {
-    console.log(puppeteerapi.bypass('ddd'));
+router.post('/test', (req, res, next) => {
+    const data = req.body;
+    console.log(puppeteerapi.bypass(data));
     res.send('respond with a resource');
 });
 
 
-router.get('/openPage', (req, res, next) => {
-    puppeteerapi.openPage(false);
-    res.send('respond with a resource');
+router.post('/openPage', async (req, res, next) => {
+    const data = req.body;
+    const { headless, } = data;
+    const retValue = await puppeteerapi.openPage(headless);
+    res.send(retValue);
 });
 
+
+router.post('/goto', async (req, res, next) => {
+    const data = req.body;
+    const {
+        tabindex,
+        url,
+    } = data;
+    const retValue = await puppeteerapi.goto(tabindex, url);
+    res.send(retValue);
+});
 
 module.exports = router;
